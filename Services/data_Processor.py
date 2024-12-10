@@ -1,11 +1,10 @@
 
-import nltk  # Natural Language Toolkit for text processing
-from nltk.corpus import stopwords  # To remove stopwords
+import nltk
+from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from data_Extract import DataExtractor
-# 
-# Download necessary NLTK data
-nltk.download("stopwords")  # Required internet connection
+
+nltk.download("stopwords")
 nltk.download("wordnet")
 
 class DataProcessor:
@@ -20,8 +19,8 @@ class DataProcessor:
         for sentence in self.data:
             lemmatized_sen=[]
             for token in sentence:
-                if token.lower() not in self.stop_words:  # Convert to lowercase for uniformity
-                    lemmatized_word = self.Lemmatizer.lemmatize(token.lower())  # Lemmatize the token
+                if token.lower() not in self.stop_words:
+                    lemmatized_word = self.Lemmatizer.lemmatize(token.lower())
                     lemmatized_sen.append(lemmatized_word)
             self.filtered_tokens.append(lemmatized_sen)
 
