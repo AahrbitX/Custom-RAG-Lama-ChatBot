@@ -40,9 +40,9 @@ class DataExtractor:
 
 
 
-if __name__=="__main__":
-    path="/home/ghost/Documents/My_projects/Business_Projects/Products/Custom-RAG-Lama-ChatBot/Services/Project.pdf"
+# if __name__=="__main__":
+#     path="/home/ghost/Documents/My_projects/Business_Projects/Products/Custom-RAG-Lama-ChatBot/Services/Project.pdf"
 
-    obj= DataExtractor(path)
+#     obj= DataExtractor(path)
 
-    print(obj.get_sentences())
+#     print(obj.get_sentences())

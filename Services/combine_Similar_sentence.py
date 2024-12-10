@@ -30,7 +30,6 @@ def combine_sentences(sentences, threshold=0.6):
 
     return combined_paragraphs
 
-
 combined_paragraphs =combine_sentences(sentences)
 
 print(combined_paragraphs)
