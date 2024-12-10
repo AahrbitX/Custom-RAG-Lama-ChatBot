@@ -2,34 +2,45 @@ from sentence_transformers import SentenceTransformer, util
 import spacy
 from data_Extract import DataExtractor
 
-model =SentenceTransformer("all-MiniLM-L6-v2")
+# Load models
+model = SentenceTransformer("all-MiniLM-L6-v2")
 nlp = spacy.load("en_core_web_sm")
 
-topics =["About HTML","About CSS","About JavaScript","About To-Do Application","About Portfolio Application"]
+# Topics and file path
+topics = ["About HTML", "About CSS", "About JavaScript", "About To-Do Application", "About Portfolio Application"]
+path = "/home/ghost/Documents/My_projects/Business_Projects/Products/Custom-RAG-Lama-ChatBot/Services/Project_srm.pdf"
 
-path="/home/ghost/Documents/My_projects/Business_Projects/Products/Custom-RAG-Lama-ChatBot/Services/Project.pdf"
+# Load data
+dataLoader = DataExtractor(path)
+sentences = dataLoader.get_sentences()
 
-dataLoder=DataExtractor(path)
+# Function to combine similar sentences
+def combine_sentences(sentences, threshold=0.4):
+    combined_paragraphs = []  # Initialize as a list
+    current_paragraph = ""  # Initialize as an empty string
 
-sentences= dataLoder.get_sentences()
+    for i in range(len(sentences)):
+        if not current_paragraph:  # If the current paragraph is empty
+            current_paragraph = sentences[i]
+        else:
+            # Calculate similarity between the current sentence and the last sentence in the paragraph
+            last_sentence = current_paragraph.split('\n')[-1]  # Get the last sentence
+            sim = util.cos_sim(model.encode(sentences[i]), model.encode(last_sentence))[0][0].item()
 
-def combine_sentences(sentences, threshold=0.6):
-    combined_paragraphs =[]
-    current_paragraph =sentence =[0]
+            if sim >= threshold:
+                current_paragraph += " " + sentences[i]  # Append the sentence to the current paragraph
+            else:
+                combined_paragraphs.append(current_paragraph.strip())  # Save the current paragraph
+                current_paragraph = sentences[i]  # Start a new paragraph
 
-    for i in range(1,len(sentences)):
-        sim = util.cos_sim(model.encode(sentences[i]), model.encode(current_paragraph.split('\n')[-1]))[0][0].item()
-    if sim >= threshold:
-        current_paragraph+=" "+sentence[i]
-
-    else:
-        combined_paragraphs.append(current_paragraph)
-        current_paragraph=sentences[i]
-    combined_paragraphs.append(current_paragraph)
-
+    # Add the last paragraph
+    if current_paragraph:
+        combined_paragraphs.append(current_paragraph.strip())
 
     return combined_paragraphs
 
-combined_paragraphs =combine_sentences(sentences)
+# Combine sentences
+combined_paragraphs = combine_sentences(sentences)
 
+# Print the combined paragraphs
 print(combined_paragraphs)
